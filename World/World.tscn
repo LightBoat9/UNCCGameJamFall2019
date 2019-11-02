@@ -11,8 +11,6 @@ tile_data = PoolIntArray( -1114111, 0, 0, -1048575, 0, 0, -983039, 0, 0, -917503
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 collision_layer = 1
-ACCELERATION = 1024.0
-MAX_X_SPEED = 256.0
 WALL_SNAP_DIST = 32.0
 
 [node name="Chump" parent="." instance=ExtResource( 3 )]

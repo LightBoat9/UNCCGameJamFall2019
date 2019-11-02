@@ -81,6 +81,10 @@ script = ExtResource( 5 )
 [node name="StateBoost" type="Node" parent="StateMachine"]
 script = ExtResource( 11 )
 
+[node name="Timer" type="Timer" parent="StateMachine/StateBoost"]
+wait_time = 0.2
+one_shot = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/player_air_down = SubResource( 2 )
 anims/player_air_up = ExtResource( 9 )
@@ -97,3 +101,4 @@ cast_to = Vector2( 64, 0 )
 [node name="FootRay" type="RayCast2D" parent="."]
 position = Vector2( 0, 48 )
 cast_to = Vector2( 64, 0 )
+[connection signal="timeout" from="StateMachine/StateBoost/Timer" to="StateMachine/StateBoost" method="_on_Timer_timeout"]

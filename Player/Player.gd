@@ -2,11 +2,11 @@ extends KinematicBody2D
 
 export var INIT_GRAVITY: float = 20
 export var GRAVITY: float = 800
-export var ACCELERATION: float = 600
-export var DECELERATION: float = 400
-export var MAX_X_SPEED: float = 64*3
+export var ACCELERATION: float = 1024
+export var DECELERATION: float = 800
+export var MAX_X_SPEED: float = 256
 export var JUMP_SPEED: float = 400
-export var WALL_JUMP_SPEED: Vector2 = Vector2(400, -400)
+export var WALL_JUMP_SPEED: Vector2 = Vector2(600, -400)
 export var WALL_SNAP_DIST: float = 16
 
 var velocity: Vector2 = Vector2()
@@ -18,7 +18,8 @@ onready var jump_grace: Timer = $JumpGrace
 onready var hand_ray: RayCast2D = $HandRay
 onready var foot_ray: RayCast2D = $FootRay
 
-var prev_on_floor = false
+var can_boost: bool = true
+var prev_on_floor: bool = false
 var dir_input: Vector2 = Vector2()
 
 func default_movement(delta: float) -> void:
@@ -33,7 +34,7 @@ func default_movement(delta: float) -> void:
 	
 	var targ = dir_input.x * MAX_X_SPEED
 	var delta_x = targ - velocity.x
-	var max_displacement = (ACCELERATION if (sign(targ)==sign(velocity.x) or sign(velocity.x)==0) else DECELERATION) * delta
+	var max_displacement = (ACCELERATION if (sign(delta_x)==sign(velocity.x) or sign(velocity.x)==0) else DECELERATION) * delta
 	velocity.x += clamp(delta_x, -max_displacement, max_displacement)
 		
 	velocity = move_and_slide(velocity, Vector2.UP)
@@ -63,6 +64,9 @@ func default_movement(delta: float) -> void:
 				move_and_collide(snap)
 				#state_machine.set_deferred("current_state", "StateOnWall")
 				jump(true)
+				
+	if is_on_floor() or is_on_wall():
+		can_boost = true
 		
 func default_animation(delta: float) -> void:
 	if velocity.y == 0:
@@ -93,9 +97,6 @@ func jump(off_wall = false) -> void:
 		velocity.y = -JUMP_SPEED
 		
 func apply_base_movement(delta: float, vector: Vector2) -> void:
-	if velocity.y == 0:
-		velocity.y = INIT_GRAVITY
-		
 	velocity += vector * delta
 	
 	velocity = move_and_slide(velocity, Vector2.UP)

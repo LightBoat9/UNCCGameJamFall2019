@@ -5,5 +5,5 @@ func state_physics_process(delta: float) -> void:
 	get_owner().default_collisions()
 	get_owner().default_animation(delta)
 	
-	if Input.is_action_pressed("ui_cancel"):
+	if get_owner().can_boost and Input.is_action_just_pressed("ui_cancel") and get_owner().dir_input != Vector2():
 		get_parent().current_state = "StateBoost"
