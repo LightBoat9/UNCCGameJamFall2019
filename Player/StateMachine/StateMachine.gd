@@ -3,13 +3,13 @@ extends Node
 var current_state: NodePath = NodePath("StateDefault") setget set_current_state
 
 func set_current_state(state: NodePath) -> void:
-	if get_node(current_state).has_method("state_entered"):
-		get_node(current_state).state_entered()
+	if get_node(current_state).has_method("state_exited"):
+		get_node(current_state).state_exited()
 	
 	current_state = state
 	
-	if get_node(current_state).has_method("state_exited"):
-		get_node(current_state).state_exited()
+	if get_node(current_state).has_method("state_entered"):
+		get_node(current_state).state_entered()
 
 func _process(delta: float) -> void:
 	if get_node(current_state).has_method("state_process"):

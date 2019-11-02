@@ -1,17 +1,21 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://Player/Sprites/player-temp.png" type="Texture" id=1]
+[ext_resource path="res://Player/Sprites/player_img.png" type="Texture" id=1]
 [ext_resource path="res://Player/StateMachine/StateMachine.gd" type="Script" id=2]
 [ext_resource path="res://Player/StateMachine/StateDefault.gd" type="Script" id=3]
 [ext_resource path="res://Player/Player.gd" type="Script" id=4]
+[ext_resource path="res://Player/StateMachine/StateOnWall.gd" type="Script" id=5]
+[ext_resource path="res://Player/Animation/player_run.tres" type="Animation" id=6]
+[ext_resource path="res://Player/Animation/player_on_wall.tres" type="Animation" id=7]
+[ext_resource path="res://Player/Animation/player_idle.tres" type="Animation" id=8]
+[ext_resource path="res://Player/Animation/player_air_up.tres" type="Animation" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 16, 16 )
+extents = Vector2( 48, 48 )
 
 [sub_resource type="Animation" id=2]
-resource_name = "walk"
-length = 0.4
-loop = true
+resource_name = "player_air_down"
+length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -19,25 +23,33 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 0, 1 ]
+"values": [ 10 ]
 }
 
 [node name="Player" type="KinematicBody2D"]
+collision_layer = 0
 script = ExtResource( 4 )
 
+[node name="JumpGrace" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
 [node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0.100739, 0.300537 )
 texture = ExtResource( 1 )
-hframes = 2
+offset = Vector2( 16, 0 )
+hframes = 17
+frame = 11
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 16 )
 shape = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-zoom = Vector2( 0.5, 0.5 )
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -45,5 +57,12 @@ script = ExtResource( 2 )
 [node name="StateDefault" type="Node" parent="StateMachine"]
 script = ExtResource( 3 )
 
+[node name="StateOnWall" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/walk = SubResource( 2 )
+anims/player_air_down = SubResource( 2 )
+anims/player_air_up = ExtResource( 9 )
+anims/player_idle = ExtResource( 8 )
+anims/player_on_wall = ExtResource( 7 )
+anims/player_run = ExtResource( 6 )

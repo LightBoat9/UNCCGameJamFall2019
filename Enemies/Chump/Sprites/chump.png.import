@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/player-temp.png-8f93745f178bbbcdef84a7be40951700.stex"
+path="res://.import/chump.png-281f3728e55ab31eb4d712164d1d44d4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Player/Sprites/player-temp.png"
-dest_files=[ "res://.import/player-temp.png-8f93745f178bbbcdef84a7be40951700.stex" ]
+source_file="res://Enemies/Chump/Sprites/chump.png"
+dest_files=[ "res://.import/chump.png-281f3728e55ab31eb4d712164d1d44d4.stex" ]
 
 [params]
 
