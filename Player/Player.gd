@@ -124,4 +124,4 @@ func can_wall_jump() -> bool:
 	return not is_on_floor() and is_on_wall() and not hanging_off_wall()
 	
 func ready_to_boost() -> bool:
-	return can_boost and dir_input != Vector2() and (dir_input != Vector2.DOWN or not is_on_floor())
+	return can_boost and dir_input != Vector2() and (dir_input.y != 1 or not is_on_floor()) and (abs(dir_input.x) != 1 or not is_on_wall())
