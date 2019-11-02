@@ -5,7 +5,6 @@ export var GRAVITY: float = 800
 export var ACCELERATION: float = 600
 export var DECELERATION: float = 400
 export var MAX_X_SPEED: float = 64*3
-export var MAX_Y_SPEED: float = 64*3
 export var JUMP_SPEED: float = 400
 export var WALL_JUMP_SPEED: Vector2 = Vector2(400, -400)
 export var WALL_SNAP_DIST: float = 16
@@ -16,9 +15,11 @@ onready var sprite: Sprite = $Sprite
 onready var anim_player: AnimationPlayer = $AnimationPlayer
 onready var state_machine: Node = $StateMachine
 onready var jump_grace: Timer = $JumpGrace
+onready var hand_ray: RayCast2D = $HandRay
+onready var foot_ray: RayCast2D = $FootRay
 
 var prev_on_floor = false
-var x_input = 0
+var dir_input: Vector2 = Vector2()
 
 func default_movement(delta: float) -> void:
 	# Start the gravity with some speed so that collision with floor is always detected
@@ -27,20 +28,15 @@ func default_movement(delta: float) -> void:
 	
 	velocity.y += delta * GRAVITY
 	
-	x_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	dir_input.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	dir_input.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	
-	if abs(velocity.x) < MAX_X_SPEED:
-		velocity.x += x_input * delta * ACCELERATION
-	
-	if abs(velocity.x) > MAX_X_SPEED or not x_input:
-		if abs(velocity.x) > DECELERATION * delta:
-			velocity.x -= sign(velocity.x) * delta * DECELERATION
-		else:
-			velocity.x = 0
+	var targ = dir_input.x * MAX_X_SPEED
+	var delta_x = targ - velocity.x
+	var max_displacement = (ACCELERATION if (sign(targ)==sign(velocity.x) or sign(velocity.x)==0) else DECELERATION) * delta
+	velocity.x += clamp(delta_x, -max_displacement, max_displacement)
 		
-	var scaled_velocity = move_and_slide(velocity, Vector2.UP)
-	
-	velocity.y = scaled_velocity.y
+	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	# Start grace timer if leaving floor
 	if not is_on_floor() and prev_on_floor:
@@ -52,18 +48,14 @@ func default_movement(delta: float) -> void:
 		if Input.is_action_just_pressed("ui_select"):
 			jump()
 	
-	if not is_on_floor() and is_on_wall():
-		if velocity.y > 0:
-			velocity.x = 0
-			state_machine.set_deferred("current_state", "StateOnWall")
+	if can_wall_jump():
+		velocity.x = 0
+		state_machine.set_deferred("current_state", "StateOnWall")
 		
-	if velocity.x != 0:
-		sprite.offset.x = sign(velocity.x) * 16
-		sprite.flip_h = velocity.x < 0
+	handle_sprite_flip()
 		
-	if velocity.y>0 && get_slide_count() == 0:
+	if get_slide_count() == 0 and not hanging_off_wall():
 		var snap = Vector2(WALL_SNAP_DIST, 0) * (-1 if sprite.flip_h else 1)
-		#	Vector2(sign(velocity.x), 1)
 			
 		if test_move(transform, snap):
 			if Input.is_action_just_pressed("ui_select"):
@@ -76,8 +68,8 @@ func default_animation(delta: float) -> void:
 	if velocity.y == 0:
 		if velocity.x == 0:
 			anim_player.play("player_idle")
-		elif sign(velocity.x) != sign(x_input) && sign(x_input) != 0:
-			anim_player.play("player_turnAround")
+		elif sign(velocity.x) != sign(dir_input.x) and sign(dir_input.x) != 0:
+			anim_player.play("player_turn_around")
 		else:
 			anim_player.play("player_run", -1, velocity.x/MAX_X_SPEED)
 	else:
@@ -99,3 +91,30 @@ func jump(off_wall = false) -> void:
 		velocity = WALL_JUMP_SPEED * Vector2((1 if $Sprite.flip_h else -1), 1)
 	else:
 		velocity.y = -JUMP_SPEED
+		
+func apply_base_movement(delta: float, vector: Vector2) -> void:
+	if velocity.y == 0:
+		velocity.y = INIT_GRAVITY
+		
+	velocity += vector * delta
+	
+	velocity = move_and_slide(velocity, Vector2.UP)
+	
+func hanging_off_wall() -> bool:
+	hand_ray.enabled = true
+	foot_ray.enabled = true
+	
+	hand_ray.cast_to = Vector2(64, 0) * (-1 if sprite.flip_h else 1)
+	foot_ray.cast_to = Vector2(64, 0) * (-1 if sprite.flip_h else 1)
+	return not hand_ray.is_colliding() or not foot_ray.is_colliding() or is_on_floor()
+	
+	hand_ray.enabled = false
+	foot_ray.enabled = false
+	
+func handle_sprite_flip() -> void:
+	if velocity.x != 0:
+		sprite.offset.x = sign(velocity.x) * 16
+		sprite.flip_h = velocity.x < 0
+		
+func can_wall_jump() -> bool:
+	return not is_on_floor() and is_on_wall() and not hanging_off_wall()
