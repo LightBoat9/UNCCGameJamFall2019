@@ -5,6 +5,7 @@ export var GRAVITY: float = 800
 export var ACCELERATION: float = 1024
 export var DECELERATION: float = 800
 export var MAX_X_SPEED: float = 256
+export var MAX_Y_SPEED: float = 500
 export var JUMP_SPEED: float = 400
 export var WALL_JUMP_SPEED: Vector2 = Vector2(600, -400)
 export var WALL_SNAP_DIST: float = 16
@@ -36,7 +37,9 @@ func default_movement(delta: float) -> void:
 	var delta_x = targ - velocity.x
 	var max_displacement = (ACCELERATION if (sign(delta_x)==sign(velocity.x) or sign(velocity.x)==0) else DECELERATION) * delta
 	velocity.x += clamp(delta_x, -max_displacement, max_displacement)
-		
+	
+	velocity.y = min(velocity.y, MAX_Y_SPEED)
+	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	# Start grace timer if leaving floor
@@ -119,3 +122,6 @@ func handle_sprite_flip() -> void:
 		
 func can_wall_jump() -> bool:
 	return not is_on_floor() and is_on_wall() and not hanging_off_wall()
+	
+func ready_to_boost() -> bool:
+	return can_boost and dir_input != Vector2() and (dir_input != Vector2.DOWN or not is_on_floor())

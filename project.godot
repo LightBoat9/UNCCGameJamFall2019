@@ -19,6 +19,10 @@ config/name="UNCCGameJamFall2019"
 run/main_scene="res://World/World.tscn"
 config/icon="res://icon.png"
 
+[gui]
+
+theme/custom_font="res://UI/Fonts/KenneyPixel.tres"
+
 [input]
 
 ui_select={

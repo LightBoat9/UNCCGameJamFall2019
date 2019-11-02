@@ -1,13 +1,20 @@
 extends Node
 
-export var BOOST_SPEED = 600
+export var BOOST_SPEED = 800
 
 onready var timer = $Timer
 
+const boost_anims = ["player_boost_up", "player_boost_up_diag", "player_boost_right", "player_boost_down_diag", "player_boost_down"]
+
 func state_entered():
 	get_owner().can_boost = false
-	get_owner().anim_player.play("player_boost_up")
-	get_owner().velocity = (get_owner().dir_input * Vector2.ONE) * BOOST_SPEED
+	var vec = get_owner().dir_input
+	vec.x = abs(vec.x)
+	var ind = round(((vec.angle() + (PI/2))/PI)* (len(boost_anims)-1))
+	
+	get_owner().anim_player.play(boost_anims[ind])
+	get_owner().velocity = (get_owner().dir_input.normalized()) * BOOST_SPEED
+	get_owner().handle_sprite_flip()
 	timer.start()
 
 func state_physics_process(delta: float):
