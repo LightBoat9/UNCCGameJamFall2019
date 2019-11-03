@@ -20,11 +20,14 @@ onready var state_machine: Node = $StateMachine
 onready var jump_grace: Timer = $JumpGrace
 onready var hand_ray: RayCast2D = $HandRay
 onready var foot_ray: RayCast2D = $FootRay
+onready var collect_label: Label = $CanvasLayer/Control/Collectables/Label
+onready var boost_hitbox: Area2D = $BoostHitbox
 
 var can_boost: bool = true
 var prev_on_floor: bool = false
 var jumped : bool = false
 var dir_input: Vector2 = Vector2()
+var collectables: int = 0 setget set_collectables
 
 func default_movement(delta: float) -> void:
 	# Start the gravity with some speed so that collision with floor is always detected
@@ -137,3 +140,10 @@ func can_wall_jump() -> bool:
 	
 func ready_to_boost() -> bool:
 	return can_boost and dir_input != Vector2() and (dir_input.y != 1 or not is_on_floor()) and (abs(dir_input.x) != 1 or not is_on_wall())
+
+func set_collectables(to: int) -> void:
+	collectables = to
+	collect_label.text = str(to)
+
+func _on_BoostHitbox_body_entered(body):
+	print(body)

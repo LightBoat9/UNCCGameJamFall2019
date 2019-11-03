@@ -16,6 +16,12 @@ func state_entered():
 	get_owner().velocity = (get_owner().dir_input.normalized()) * BOOST_SPEED
 	get_owner().handle_sprite_flip()
 	timer.start()
+	
+	get_owner().boost_hitbox.monitoring = true
+	get_owner().boost_hitbox.position = Vector2(32, 32) * get_owner().dir_input
+
+func state_exited():
+	get_owner().boost_hitbox.monitoring = false
 
 func state_physics_process(delta: float):
 	get_owner().apply_base_movement(delta, Vector2())
