@@ -26,7 +26,10 @@ tracks/0/keys = {
 "values": [ 8, 9, 10, 11 ]
 }
 
-[node name="Chump" type="KinematicBody2D"]
+[node name="Chump" type="KinematicBody2D" groups=[
+"bounce",
+"enemies",
+]]
 collision_layer = 33
 script = ExtResource( 2 )
 sightRange = Vector2( 512, 32 )

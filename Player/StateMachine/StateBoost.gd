@@ -1,6 +1,7 @@
 extends Node
 
 export var BOOST_SPEED = 800
+export var BOOST_BOUNCE = 800
 
 onready var timer = $Timer
 
@@ -26,6 +27,15 @@ func state_exited():
 func state_physics_process(delta: float):
 	get_owner().apply_base_movement(delta, Vector2())
 	get_owner().handle_sprite_flip()
+	
+	for i in range(get_owner().get_slide_count()):
+		var col = get_owner().get_slide_collision(i)
+		if col.collider.is_in_group("bounce"):
+			get_owner().velocity.y = -BOOST_BOUNCE
+			get_parent().current_state = "StateDefault"
+			get_owner().can_boost = true
+			get_owner().hit_stop()
+			return
 	
 	if get_owner().is_on_ceiling() or get_owner().is_on_floor() or get_owner().is_on_wall():
 		timer.stop()

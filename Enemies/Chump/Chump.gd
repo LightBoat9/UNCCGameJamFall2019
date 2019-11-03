@@ -20,7 +20,8 @@ func _ready():
 	storedRayDirection = groundChecker.cast_to
 	
 	if (player):
-		print("Got reference to player")
+		# print("Got reference to player")
+		pass
 
 func jumped_on():
 	anim_player.stop()
@@ -38,11 +39,16 @@ func _physics_process(delta):
 		
 		#checking for stable ground ahead
 		
+		for i in range(get_slide_count()):
+			var col = get_slide_collision(i)
+			if col.collider.is_in_group("player"):
+				player.knockback(Vector2(500 * dir(), -250))
+		
 		if !groundChecker.is_colliding():
-			print("Unstable ground ahead; turning around")
+			# print("Unstable ground ahead; turning around")
 			sprite.flip_h = !sprite.flip_h
 		elif is_on_wall():
-			print("Bonked on a wall; turning around")
+			# print("Bonked on a wall; turning around")
 			sprite.flip_h = !sprite.flip_h
 		
 		updateGroundChecker()
@@ -70,7 +76,7 @@ func player_update():
 		alertTimer.stop()
 	else:
 		if (walking && alertTimer.is_stopped()):
-			print("Starting end walk timer")
+			# print("Starting end walk timer")
 			alertTimer.start()
 		pass
 
@@ -83,7 +89,7 @@ func dir():
 	return (1 if sprite.flip_h else -1)
 
 func timesUp():
-	print("Time's up; Time to stop walking")
+	# print("Time's up; Time to stop walking")
 	anim_player.play("chump_idle")
 	walking = false
 	groundChecker.enabled = false

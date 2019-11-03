@@ -118,7 +118,20 @@ func jump(off_wall = false, power = JUMP_SPEED) -> void:
 func apply_base_movement(delta: float, vector: Vector2) -> void:
 	velocity += vector * delta
 	
+	velocity.y += delta * GRAVITY
+	
+	var delta_x = -velocity.x
+	var max_displacement = (ACCELERATION if (sign(delta_x)==0 or sign(velocity.x)==0) else DECELERATION) * delta
+	velocity.x += clamp(delta_x, -max_displacement, max_displacement)
+	
+	velocity.y = min(velocity.y, MAX_Y_SPEED)
+	
 	velocity = move_and_slide(velocity, Vector2.UP)
+	
+func knockback(vector: Vector2) -> void:
+	if state_machine.current_state == "StateDefault":
+		velocity = vector
+		state_machine.current_state = "StateKnockback"
 	
 func hanging_off_wall() -> bool:
 	hand_ray.enabled = true
@@ -147,4 +160,13 @@ func set_collectables(to: int) -> void:
 	collect_label.text = str(to)
 
 func _on_BoostHitbox_body_entered(body):
-	print(body)
+	if body.is_in_group("enemies"):
+		velocity = Vector2()
+		hit_stop()
+		
+func hit_stop():
+	$HitStop.start()
+	get_tree().paused = true
+
+func _on_HitStop_timeout():
+	get_tree().paused = false
