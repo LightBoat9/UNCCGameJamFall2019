@@ -158,6 +158,8 @@ func set_collectables(to: int) -> void:
 func _on_BoostHitbox_body_entered(body):
 	if body.is_in_group("enemies"):
 		
+		body.boosted_into(velocity, position)
+		
 		if body.is_in_group("bounce") and velocity.y > 0:
 			velocity.y = -BOOST_BOUNCE
 			state_machine.current_state = "StateDefault"

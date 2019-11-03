@@ -9,6 +9,8 @@ onready var stateMachine = $StateMachine
 
 var player = null
 var updatePhysics: bool = true
+var storedBoostVector: Vector2
+
 
 func _ready():
 	add_to_group("enemies")
@@ -20,8 +22,8 @@ func jumped_on():
 func boosted_into(boostVector: Vector2, hitPostiion: Vector2):
 	print("ow")
 	stateMachine.set_current_state("StateDying")
-	get_node(stateMachine.current_state).init(boostVector * 5)
-	collision_layer = 0
+	storedBoostVector = boostVector
+	collision_layer = 20
 
 func _physics_process(delta):
 	
