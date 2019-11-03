@@ -37,7 +37,7 @@ func state_physics_process(delta: float):
 			get_owner().hit_stop()
 			return
 	
-	if get_owner().is_on_ceiling() or get_owner().is_on_floor() or get_owner().is_on_wall():
+	if get_owner().is_on_ceiling() or get_owner().is_on_wall():
 		timer.stop()
 		_on_Timer_timeout()
 
