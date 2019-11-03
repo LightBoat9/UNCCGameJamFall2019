@@ -28,7 +28,7 @@ func boosted_into(boostVector: Vector2, hitPostiion: Vector2):
 	print(velocity)
 
 func _physics_process(delta):
-	
+	$HitBox.position.x = 24 * dir()
 	velocity.y += delta * GRAVITY
 	apply_base_movement(delta, velocity)
 
@@ -49,3 +49,7 @@ func dir():
 
 func flip():
 	sprite.flip_h = !sprite.flip_h
+
+func _on_HitBox_body_entered(body):
+	if body.is_in_group("player"):
+		body.knockback(Vector2(500 * sign(body.global_position.x - global_position.x), -250))
