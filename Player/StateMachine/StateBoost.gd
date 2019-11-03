@@ -24,7 +24,7 @@ func state_exited():
 	get_owner().boost_hitbox.set_deferred("monitoring", false)
 
 func state_physics_process(delta: float):
-	get_owner().apply_base_movement(delta, Vector2())
+	get_owner().apply_base_movement(delta, Vector2(), false)
 	get_owner().handle_sprite_flip()
 	
 	if get_owner().is_on_ceiling() or get_owner().is_on_wall():

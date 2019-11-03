@@ -21,5 +21,11 @@ WALL_SNAP_DIST = 32.0
 [node name="Chump" parent="." instance=ExtResource( 3 )]
 position = Vector2( 288, 144 )
 
+[node name="Chump2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 64, 144 )
+
+[node name="Chump3" parent="." instance=ExtResource( 3 )]
+position = Vector2( -240, 144 )
+
 [node name="Collectable" parent="." instance=ExtResource( 4 )]
 position = Vector2( -224, 64 )

@@ -25,7 +25,7 @@ var can_boost: bool = true
 var prev_on_floor: bool = false
 var jumped : bool = false
 var dir_input: Vector2 = Vector2()
-var collectables: int = 0 setget set_collectables
+var collectables: int = 1 setget set_collectables
 
 func default_movement(delta: float) -> void:
 	# Start the gravity with some speed so that collision with floor is always detected
@@ -118,10 +118,11 @@ func jump(off_wall = false, power = JUMP_SPEED) -> void:
 	else:
 		velocity.y = -power
 	
-func knockback(vector: Vector2) -> void:
-	if state_machine.current_state == "StateDefault":
+func knockback(vector: Vector2, damage=1) -> void:
+	if state_machine.current_state != "StateDeath":
 		velocity = vector
 		state_machine.current_state = "StateKnockback"
+		self.collectables -= 1
 	
 func hanging_off_wall() -> bool:
 	hand_ray.enabled = true
@@ -149,17 +150,22 @@ func set_collectables(to: int) -> void:
 	collectables = to
 	collect_label.text = str(to)
 	collect_anim_player.play("collect_grow")
+	if collectables <= 0:
+		$HitStop.wait_time = 0.5
+		hit_stop()
+		state_machine.current_state = "StateDeath"
 
 func _on_BoostHitbox_body_entered(body):
 	if body.is_in_group("enemies"):
-		velocity = Vector2()
 		
-		if body.is_in_group("bounce") and not is_on_floor():
+		if body.is_in_group("bounce") and velocity.y > 0:
 			velocity.y = -BOOST_BOUNCE
 			state_machine.current_state = "StateDefault"
 			can_boost = true
 			body.jumped_on()
 			combo_manager.add_combo(combo_manager.Combo.BOOSTHIT)
+		else:
+			velocity = Vector2()
 			
 		hit_stop()
 		
@@ -173,3 +179,8 @@ func _on_HitStop_timeout():
 func _on_ComboLabel_item_rect_changed():
 	if combo_label:
 		combo_label.rect_pivot_offset = Vector2(1, 0) * combo_label.rect_size / 2
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "player_death":
+		get_tree().reload_current_scene()

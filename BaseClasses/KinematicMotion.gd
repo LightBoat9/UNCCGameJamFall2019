@@ -7,10 +7,11 @@ export var MAX_Y_SPEED: float = 500
 
 var velocity: Vector2 = Vector2()
 
-func apply_base_movement(delta: float, vector: Vector2) -> void:
+func apply_base_movement(delta: float, vector: Vector2, apply_gravity=true) -> void:
 	velocity += vector * delta
 	
-	velocity.y += delta * GRAVITY
+	if apply_gravity:
+		velocity.y += delta * GRAVITY
 	
 	var delta_x = -velocity.x
 	var max_displacement = DECELERATION * delta
