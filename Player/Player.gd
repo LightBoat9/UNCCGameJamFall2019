@@ -19,7 +19,9 @@ onready var collect_label: Label = $CanvasLayer/Control/Collectables/Label
 onready var collect_anim_player: AnimationPlayer = $CanvasLayer/Control/Collectables/AnimationPlayer
 onready var boost_hitbox: Area2D = $BoostHitbox
 onready var combo_manager: Node = $ComboManager
-onready var combo_label: Label = $CanvasLayer/Control/ComboLabel
+onready var combo: VBoxContainer = $CanvasLayer/Control/Combo
+onready var combo_label: Label = $CanvasLayer/Control/Combo/Label
+onready var combo_points_label: Label = $CanvasLayer/Control/Combo/PointsLabel
 
 var can_boost: bool = true
 var prev_on_floor: bool = false
@@ -122,6 +124,7 @@ func knockback(vector: Vector2, damage=1) -> void:
 	if state_machine.current_state != "StateDeath":
 		velocity = vector
 		state_machine.current_state = "StateKnockback"
+		combo_manager.reset_combo()
 		self.collectables -= 1
 	
 func hanging_off_wall() -> bool:
@@ -160,7 +163,7 @@ func _on_BoostHitbox_body_entered(body):
 		
 		body.boosted_into(velocity, position)
 		
-		if body.is_in_group("bounce") and velocity.y > 0:
+		if body.is_in_group("bounce"):
 			velocity.y = -BOOST_BOUNCE
 			state_machine.current_state = "StateDefault"
 			can_boost = true
