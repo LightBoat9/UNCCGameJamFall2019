@@ -7,3 +7,4 @@ func state_physics_process(delta: float) -> void:
 	
 	if get_owner().ready_to_boost() and Input.is_action_just_pressed("ui_cancel"):
 		get_parent().current_state = "StateBoost"
+		get_owner().jumped = false

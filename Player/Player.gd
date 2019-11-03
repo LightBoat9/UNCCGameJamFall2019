@@ -105,6 +105,7 @@ func default_collisions() -> void:
 			if get_slide_collision(i).collider.is_in_group("enemies"):
 				jumped = true
 				jump(false, BOUNCE_JUMP_SPEED)
+				get_slide_collision(i).collider.jumped_on()
 
 func jump(off_wall = false, power = JUMP_SPEED) -> void:
 	jump_grace.stop()
