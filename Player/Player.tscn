@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Player/Sprites/player.png" type="Texture" id=1]
 [ext_resource path="res://Player/StateMachine/StateMachine.gd" type="Script" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://Player/Animation/player_boost_up_diag.tres" type="Animation" id=12]
 [ext_resource path="res://Collectable/Sprites/collectable_screw.tres" type="Texture" id=13]
 [ext_resource path="res://Player/StateMachine/StateKnockback.gd" type="Script" id=14]
+[ext_resource path="res://Player/ComboManager/ComboManager.gd" type="Script" id=15]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 30, 44 )
@@ -97,8 +98,40 @@ tracks/0/keys = {
 "values": [ 12 ]
 }
 
+[sub_resource type="Animation" id=9]
+resource_name = "collect_grow"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
+}
+
 [sub_resource type="RectangleShape2D" id=7]
-extents = Vector2( 32, 32 )
+extents = Vector2( 36, 36 )
+
+[sub_resource type="Animation" id=8]
+resource_name = "combo_grow"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("../CanvasLayer/Control/ComboLabel:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
+}
 
 [node name="Player" type="KinematicBody2D" groups=[
 "player",
@@ -199,14 +232,21 @@ margin_right = 48.0
 margin_bottom = 28.0
 text = "0"
 
-[node name="Label" type="Label" parent="CanvasLayer/Control"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/Collectables"]
+anims/collect_grow = SubResource( 9 )
+
+[node name="ComboLabel" type="Label" parent="CanvasLayer/Control"]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -40.0
 margin_top = 16.0
 margin_right = 40.0
-margin_bottom = 24.0
-text = "COMBO N"
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 40, 0 )
+text = "Combo *0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="BoostHitbox" type="Area2D" parent="."]
 position = Vector2( 32, -32 )
@@ -215,6 +255,13 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BoostHitbox"]
 shape = SubResource( 7 )
+
+[node name="ComboManager" type="Node" parent="."]
+script = ExtResource( 15 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ComboManager"]
+anims/combo_grow = SubResource( 8 )
 [connection signal="timeout" from="HitStop" to="." method="_on_HitStop_timeout"]
 [connection signal="timeout" from="StateMachine/StateBoost/Timer" to="StateMachine/StateBoost" method="_on_Timer_timeout"]
+[connection signal="item_rect_changed" from="CanvasLayer/Control/ComboLabel" to="." method="_on_ComboLabel_item_rect_changed"]
 [connection signal="body_entered" from="BoostHitbox" to="." method="_on_BoostHitbox_body_entered"]

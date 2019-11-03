@@ -7,6 +7,7 @@ export var BOUNCE_JUMP_SPEED: float = 500
 export var JUMP_DROP_MULTIPLIER: float = 0.8
 export var WALL_JUMP_SPEED: Vector2 = Vector2(600, -400)
 export var WALL_SNAP_DIST: float = 16
+export var BOOST_BOUNCE = 800
 
 onready var sprite: Sprite = $Sprite
 onready var anim_player: AnimationPlayer = $AnimationPlayer
@@ -15,7 +16,10 @@ onready var jump_grace: Timer = $JumpGrace
 onready var hand_ray: RayCast2D = $HandRay
 onready var foot_ray: RayCast2D = $FootRay
 onready var collect_label: Label = $CanvasLayer/Control/Collectables/Label
+onready var collect_anim_player: AnimationPlayer = $CanvasLayer/Control/Collectables/AnimationPlayer
 onready var boost_hitbox: Area2D = $BoostHitbox
+onready var combo_manager: Node = $ComboManager
+onready var combo_label: Label = $CanvasLayer/Control/ComboLabel
 
 var can_boost: bool = true
 var prev_on_floor: bool = false
@@ -94,12 +98,17 @@ func default_animation(delta: float) -> void:
 			anim_player.play("player_air_up")
 			
 func default_collisions() -> void:
+	var bounced = false
 	if get_slide_count() > 0:
 		for i in range(get_slide_count()):
 			if get_slide_collision(i).collider.is_in_group("enemies"):
 				jumped = true
 				jump(false, BOUNCE_JUMP_SPEED)
 				get_slide_collision(i).collider.jumped_on()
+				bounced = true
+		
+	if is_on_floor() and not bounced:
+		combo_manager.reset_combo()
 
 func jump(off_wall = false, power = JUMP_SPEED) -> void:
 	jump_grace.stop()
@@ -139,10 +148,19 @@ func ready_to_boost() -> bool:
 func set_collectables(to: int) -> void:
 	collectables = to
 	collect_label.text = str(to)
+	collect_anim_player.play("collect_grow")
 
 func _on_BoostHitbox_body_entered(body):
 	if body.is_in_group("enemies"):
 		velocity = Vector2()
+		
+		if body.is_in_group("bounce") and not is_on_floor():
+			velocity.y = -BOOST_BOUNCE
+			state_machine.current_state = "StateDefault"
+			can_boost = true
+			body.jumped_on()
+			combo_manager.add_combo(combo_manager.Combo.BOOSTHIT)
+			
 		hit_stop()
 		
 func hit_stop():
@@ -151,3 +169,7 @@ func hit_stop():
 
 func _on_HitStop_timeout():
 	get_tree().paused = false
+
+func _on_ComboLabel_item_rect_changed():
+	if combo_label:
+		combo_label.rect_pivot_offset = Vector2(1, 0) * combo_label.rect_size / 2
