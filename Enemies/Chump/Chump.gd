@@ -40,7 +40,8 @@ func _anim_end(anim : String):
 
 func evaluate_sight(pos: Vector2):
 	var delta : Vector2 = pos - position
-	return sign(delta.x) == (1 if sprite.flip_h else -1) and \
+	return player.is_on_floor() and \
+		sign(delta.x) == (1 if sprite.flip_h else -1) and \
 		abs(delta.x)<=sightRange.x && abs(delta.y)<=sightRange.y
 
 func dir():

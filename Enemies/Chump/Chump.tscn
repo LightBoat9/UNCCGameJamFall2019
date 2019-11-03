@@ -42,10 +42,8 @@ script = ExtResource( 2 )
 sightRange = Vector2( 512, 32 )
 
 [node name="Sprite" type="Sprite" parent="."]
-rotation = 6.28319
 texture = ExtResource( 1 )
 hframes = 12
-frame = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 16 )
