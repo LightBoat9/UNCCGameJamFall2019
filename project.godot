@@ -41,4 +41,5 @@ ui_cancel={
 
 [rendering]
 
+environment/default_clear_color=Color( 0.160784, 0.211765, 0.14902, 1 )
 environment/default_environment="res://default_env.tres"

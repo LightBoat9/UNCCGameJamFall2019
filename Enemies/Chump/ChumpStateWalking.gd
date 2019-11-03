@@ -5,6 +5,7 @@ onready var timer: Timer = $AlertExtraTime
 onready var caster: RayCast2D = get_owner().get_node("GroundChecker")
 var storedRayDirection: Vector2
 onready var anim_player = $"../../AnimationPlayer"
+onready var hitbox = $"../../HitBox/CollisionShape2D"
 
 func _ready():
 	chump = get_owner()
@@ -13,10 +14,13 @@ func _ready():
 func state_entered() -> void:
 	anim_player.play("chump_walking")
 	caster.enabled = true
+	
+	hitbox.set_deferred("disabled", false)
 
 func state_exited() -> void:
 	caster.enabled = false
 	timer.stop()
+	hitbox.set_deferred("disabled", true)
 
 func state_physics_process(delta: float) -> void:
 	if chump.is_on_wall() || !caster.is_colliding():

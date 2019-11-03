@@ -89,6 +89,7 @@ position = Vector2( 24, 24 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource( 3 )
+disabled = true
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_anim_end"]
 [connection signal="timeout" from="StateMachine/StateWalking/AlertExtraTime" to="StateMachine/StateWalking" method="_on_AlertExtraTime_timeout"]
 [connection signal="timeout" from="StateMachine/StateDying/Timer" to="." method="queue_free"]

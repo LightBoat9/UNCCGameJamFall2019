@@ -10,7 +10,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 28, 28 )
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 resource_name = "buzz_dying"
 length = 0.4
 loop = true
@@ -27,8 +27,7 @@ tracks/0/keys = {
 "values": [ 0.0, 180.0, 360.0 ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "buzz_idle"
+[sub_resource type="Animation" id=3]
 length = 0.4
 loop = true
 tracks/0/type = "value"
@@ -44,8 +43,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "buzz_squish"
+[sub_resource type="Animation" id=4]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -100,9 +98,9 @@ hframes = 5
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/buzz_dying = SubResource( 4 )
-anims/buzz_idle = SubResource( 2 )
-anims/buzz_squish = SubResource( 3 )
+anims/buzz_dying = SubResource( 2 )
+anims/buzz_idle = SubResource( 3 )
+anims/buzz_squish = SubResource( 4 )
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource( 2 )
