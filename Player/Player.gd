@@ -7,6 +7,8 @@ export var DECELERATION: float = 800
 export var MAX_X_SPEED: float = 256
 export var MAX_Y_SPEED: float = 500
 export var JUMP_SPEED: float = 400
+export var BOUNCE_JUMP_SPEED: float = 500
+export var JUMP_DROP_MULTIPLIER: float = 0.8
 export var WALL_JUMP_SPEED: Vector2 = Vector2(600, -400)
 export var WALL_SNAP_DIST: float = 16
 
@@ -21,6 +23,7 @@ onready var foot_ray: RayCast2D = $FootRay
 
 var can_boost: bool = true
 var prev_on_floor: bool = false
+var jumped : bool = false
 var dir_input: Vector2 = Vector2()
 
 func default_movement(delta: float) -> void:
@@ -40,6 +43,7 @@ func default_movement(delta: float) -> void:
 	
 	velocity.y = min(velocity.y, MAX_Y_SPEED)
 	
+	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	# Start grace timer if leaving floor
@@ -49,11 +53,17 @@ func default_movement(delta: float) -> void:
 	prev_on_floor = is_on_floor()
 	
 	if is_on_floor() or (jump_grace.time_left != 0 and velocity.y >= 0):
+		jumped = false
 		if Input.is_action_just_pressed("ui_select"):
 			jump()
+			jumped = true
+	
+	if !is_on_floor() && jumped && velocity.y < 0 && !Input.is_action_pressed("ui_select"):
+		velocity.y *= JUMP_DROP_MULTIPLIER
 	
 	if can_wall_jump():
 		velocity.x = 0
+		jumped = false
 		state_machine.set_deferred("current_state", "StateOnWall")
 		
 	handle_sprite_flip()
@@ -89,15 +99,16 @@ func default_collisions() -> void:
 	if get_slide_count() > 0:
 		for i in range(get_slide_count()):
 			if get_slide_collision(i).collider.is_in_group("enemies"):
-				jump()
+				jumped = true
+				jump(false, BOUNCE_JUMP_SPEED)
 
-func jump(off_wall = false) -> void:
+func jump(off_wall = false, power = JUMP_SPEED) -> void:
 	jump_grace.stop()
 	
 	if off_wall:
 		velocity = WALL_JUMP_SPEED * Vector2((1 if $Sprite.flip_h else -1), 1)
 	else:
-		velocity.y = -JUMP_SPEED
+		velocity.y = -power
 		
 func apply_base_movement(delta: float, vector: Vector2) -> void:
 	velocity += vector * delta
