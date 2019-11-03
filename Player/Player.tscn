@@ -131,13 +131,13 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
 }
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=12]
 size = 38
 outline_size = 2
 outline_color = Color( 0.498039, 0.247059, 0.247059, 1 )
 font_data = ExtResource( 17 )
 
-[sub_resource type="RectangleShape2D" id=10]
+[sub_resource type="RectangleShape2D" id=13]
 extents = Vector2( 36, 40 )
 
 [sub_resource type="Animation" id=11]
@@ -284,7 +284,7 @@ margin_top = 28.0
 margin_right = 90.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 45, 0 )
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 12 )
 text = "0"
 align = 1
 
@@ -294,7 +294,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BoostHitbox"]
-shape = SubResource( 10 )
+shape = SubResource( 13 )
 
 [node name="ComboManager" type="Node" parent="."]
 script = ExtResource( 15 )
