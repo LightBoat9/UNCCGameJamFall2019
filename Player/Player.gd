@@ -73,6 +73,7 @@ func default_movement(delta: float) -> void:
 			
 		if test_move(transform, snap):
 			if Input.is_action_just_pressed("ui_select"):
+				can_boost = true
 				# Not multiplied by delta because this is the real distance to move
 				move_and_collide(snap)
 				#state_machine.set_deferred("current_state", "StateOnWall")
