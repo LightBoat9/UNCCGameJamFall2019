@@ -50,7 +50,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 16 ]
+"values": [ 20 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -66,7 +66,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 15 ]
+"values": [ 18 ]
 }
 
 [sub_resource type="Animation" id=5]
@@ -82,7 +82,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 14 ]
+"values": [ 16 ]
 }
 
 [sub_resource type="Animation" id=6]
@@ -131,16 +131,16 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
 }
 
-[sub_resource type="DynamicFont" id=11]
+[sub_resource type="DynamicFont" id=9]
 size = 38
 outline_size = 2
 outline_color = Color( 0.498039, 0.247059, 0.247059, 1 )
 font_data = ExtResource( 17 )
 
-[sub_resource type="RectangleShape2D" id=9]
+[sub_resource type="RectangleShape2D" id=10]
 extents = Vector2( 36, 40 )
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=11]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("../CanvasLayer/Control/Combo/PointsLabel:rect_scale")
@@ -173,8 +173,7 @@ one_shot = true
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0.100739, 0.300537 )
 texture = ExtResource( 1 )
-hframes = 17
-frame = 15
+hframes = 29
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 20 )
@@ -285,7 +284,7 @@ margin_top = 28.0
 margin_right = 90.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 45, 0 )
-custom_fonts/font = SubResource( 11 )
+custom_fonts/font = SubResource( 9 )
 text = "0"
 align = 1
 
@@ -295,13 +294,13 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BoostHitbox"]
-shape = SubResource( 9 )
+shape = SubResource( 10 )
 
 [node name="ComboManager" type="Node" parent="."]
 script = ExtResource( 15 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ComboManager"]
-anims/combo_grow = SubResource( 10 )
+anims/combo_grow = SubResource( 11 )
 [connection signal="timeout" from="HitStop" to="." method="_on_HitStop_timeout"]
 [connection signal="timeout" from="StateMachine/StateBoost/Timer" to="StateMachine/StateBoost" method="_on_Timer_timeout"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
