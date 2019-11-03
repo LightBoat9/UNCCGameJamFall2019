@@ -131,13 +131,13 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
 }
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=9]
 size = 38
 outline_size = 2
 outline_color = Color( 0.498039, 0.247059, 0.247059, 1 )
 font_data = ExtResource( 17 )
 
-[sub_resource type="RectangleShape2D" id=13]
+[sub_resource type="RectangleShape2D" id=10]
 extents = Vector2( 36, 40 )
 
 [sub_resource type="Animation" id=11]
@@ -181,6 +181,7 @@ shape = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+zoom = Vector2( 1.5, 1.5 )
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -246,15 +247,15 @@ __meta__ = {
 
 [node name="TextureButton" type="TextureRect" parent="CanvasLayer/Control/Collectables"]
 margin_right = 32.0
-margin_bottom = 32.0
+margin_bottom = 51.0
 texture = ExtResource( 13 )
 
 [node name="Label" type="Label" parent="CanvasLayer/Control/Collectables"]
 margin_left = 36.0
-margin_top = 4.0
-margin_right = 48.0
-margin_bottom = 28.0
-text = "0"
+margin_top = 13.0
+margin_right = 44.0
+margin_bottom = 37.0
+text = "1"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/Collectables"]
 anims/collect_grow = SubResource( 8 )
@@ -284,7 +285,7 @@ margin_top = 28.0
 margin_right = 90.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 45, 0 )
-custom_fonts/font = SubResource( 12 )
+custom_fonts/font = SubResource( 9 )
 text = "0"
 align = 1
 
@@ -294,7 +295,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BoostHitbox"]
-shape = SubResource( 13 )
+shape = SubResource( 10 )
 
 [node name="ComboManager" type="Node" parent="."]
 script = ExtResource( 15 )

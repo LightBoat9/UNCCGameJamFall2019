@@ -20,10 +20,8 @@ func boosted_into(boostVector: Vector2, hitPostiion: Vector2):
 	shape.set_deferred("disabled", true)
 	velocity = boostVector * 5
 	storedBoostVector = boostVector
-	print(velocity)
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	print(anim_name)
 	if anim_name == "buzz_squish":
 		stateMachine.set_current_state("StateDefault")

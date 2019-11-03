@@ -25,8 +25,7 @@ func boosted_into(boostVector: Vector2, hitPostiion: Vector2):
 	storedBoostVector = boostVector
 	shape.set_deferred("disabled", true)
 	velocity = storedBoostVector * 5
-	print(velocity)
-
+	
 func _physics_process(delta):
 	$HitBox.position.x = 24 * dir()
 	velocity.y += delta * GRAVITY

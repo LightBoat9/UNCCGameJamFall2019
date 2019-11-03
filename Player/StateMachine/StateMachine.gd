@@ -11,8 +11,6 @@ func set_current_state(state: NodePath) -> void:
 	
 	current_state = state
 	
-	print(get_node(current_state))
-	
 	if get_node(current_state).has_method("state_entered"):
 		get_node(current_state).state_entered()
 
