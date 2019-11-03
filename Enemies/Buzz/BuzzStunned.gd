@@ -1,14 +1,15 @@
 extends Node
 
-var chump
+var buzz
 onready var anim_player = $"../../AnimationPlayer"
 
 func _ready():
-	chump = get_owner()
+	buzz = get_owner()
 
 func state_entered() -> void:
 	anim_player.stop()
-	anim_player.play("chump_squish_small")
+	anim_player.play("buzz_squish")
 
 func state_exited() -> void:
 	anim_player.stop()
+

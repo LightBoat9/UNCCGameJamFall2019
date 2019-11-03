@@ -6,6 +6,7 @@ export var WALKSPEED: float = 200
 onready var anim_player: AnimationPlayer = $AnimationPlayer
 onready var sprite: Sprite = $Sprite
 onready var stateMachine = $StateMachine
+onready var shape = $CollisionShape2D
 
 var player = null
 var updatePhysics: bool = true
@@ -20,10 +21,11 @@ func jumped_on():
 	stateMachine.set_current_state("StateStunned")
 
 func boosted_into(boostVector: Vector2, hitPostiion: Vector2):
-	print("ow")
 	stateMachine.set_current_state("StateDying")
 	storedBoostVector = boostVector
-	collision_layer = 20
+	shape.set_deferred("disabled", true)
+	velocity = storedBoostVector * 5
+	print(velocity)
 
 func _physics_process(delta):
 	

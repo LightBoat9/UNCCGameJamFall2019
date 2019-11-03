@@ -4,13 +4,14 @@ var chump
 onready var timer: Timer = $AlertExtraTime
 onready var caster: RayCast2D = get_owner().get_node("GroundChecker")
 var storedRayDirection: Vector2
+onready var anim_player = $"../../AnimationPlayer"
 
 func _ready():
 	chump = get_owner()
 	storedRayDirection = caster.cast_to
 
 func state_entered() -> void:
-	chump.anim_player.play("chump_walking")
+	anim_player.play("chump_walking")
 	caster.enabled = true
 
 func state_exited() -> void:

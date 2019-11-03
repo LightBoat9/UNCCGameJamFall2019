@@ -164,7 +164,7 @@ func _on_BoostHitbox_body_entered(body):
 			velocity.y = -BOOST_BOUNCE
 			state_machine.current_state = "StateDefault"
 			can_boost = true
-			body.jumped_on()
+			#body.jumped_on()
 			combo_manager.add_combo(combo_manager.Combo.BOOSTHIT)
 		else:
 			velocity = Vector2()
