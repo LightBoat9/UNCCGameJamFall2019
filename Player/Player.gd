@@ -1,18 +1,12 @@
-extends KinematicBody2D
+extends "res://BaseClasses/KinematicMotion.gd"
 
 export var INIT_GRAVITY: float = 20
-export var GRAVITY: float = 800
-export var ACCELERATION: float = 1024
-export var DECELERATION: float = 800
 export var MAX_X_SPEED: float = 256
-export var MAX_Y_SPEED: float = 500
 export var JUMP_SPEED: float = 400
 export var BOUNCE_JUMP_SPEED: float = 500
 export var JUMP_DROP_MULTIPLIER: float = 0.8
 export var WALL_JUMP_SPEED: Vector2 = Vector2(600, -400)
 export var WALL_SNAP_DIST: float = 16
-
-var velocity: Vector2 = Vector2()
 
 onready var sprite: Sprite = $Sprite
 onready var anim_player: AnimationPlayer = $AnimationPlayer
@@ -114,19 +108,6 @@ func jump(off_wall = false, power = JUMP_SPEED) -> void:
 		velocity = WALL_JUMP_SPEED * Vector2((1 if $Sprite.flip_h else -1), 1)
 	else:
 		velocity.y = -power
-		
-func apply_base_movement(delta: float, vector: Vector2) -> void:
-	velocity += vector * delta
-	
-	velocity.y += delta * GRAVITY
-	
-	var delta_x = -velocity.x
-	var max_displacement = (ACCELERATION if (sign(delta_x)==0 or sign(velocity.x)==0) else DECELERATION) * delta
-	velocity.x += clamp(delta_x, -max_displacement, max_displacement)
-	
-	velocity.y = min(velocity.y, MAX_Y_SPEED)
-	
-	velocity = move_and_slide(velocity, Vector2.UP)
 	
 func knockback(vector: Vector2) -> void:
 	if state_machine.current_state == "StateDefault":
