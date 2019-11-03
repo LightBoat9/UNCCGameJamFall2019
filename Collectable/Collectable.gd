@@ -26,9 +26,9 @@ func _physics_process(delta: float) -> void:
 func _on_CollectableArea_body_entered(body: Node) -> void:
 	if body.is_in_group("player"):
 		player = body
+		player.get_node("ComboManager").combo_points += 1
 		$AnimationPlayer.play("free")
 		
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	if anim_name == "free":
-		player.collectables += 1
 		queue_free()
